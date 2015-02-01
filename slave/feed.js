@@ -147,10 +147,10 @@
 				return div;
 			}
 		}
-
+		
+		var maxlength = 165;
 		function shortenText(text){
 			var countchars = text.length;
-			var maxlength = Math.floor(countchars/2);
 			if(countchars > maxlength){
 				var cutText = text.substr(0, maxlength);
 				cutText = cutText.substr(0, Math.min(cutText.length, cutText.lastIndexOf(" ")));
@@ -158,6 +158,9 @@
 				var spanShow = '<span class="show">'+cutText+'</span>';
 				var spanHide = '<span class="hide">'+secondHalf+'</span>';
 				return spanShow+spanHide+' <a class="showmore" href="javascript:void(0)">... Mehr anzeigen</a>';
+			}
+			else{
+				return text;
 			}
 		}
 	}
