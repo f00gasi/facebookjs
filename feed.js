@@ -6,6 +6,7 @@
 		var link;
 		var socialdata;
 		var username;
+		var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 		FB.api(
 		    "/548395945199562?access_token="+token,
 		    function (getuserdata) {
@@ -20,11 +21,22 @@
 			$.each(data, function(i,value){
 
 				$.each(value, function(i,obj){
+					//console.log(this);
 					if(obj.hasOwnProperty('message')||obj.hasOwnProperty('picture')){
 						var postURL ='http://www.facebook.com/'+userdataobj.username+'/posts/';
 						var postID = this.id.split('_')[1];
 						var postDIV = $('<div class="fbPost" />');
 						postURL += postID;
+
+						// DATE OF POST
+						if(this.created_time !== undefined){
+							var timestamp = this.created_time;
+							var datestr = timestamp.substr(0,timestamp.indexOf('T'));
+							var time = timestamp.substr(timestamp.indexOf('T')+1,5)
+							datestr = convertDate(datestr);
+							var $dateDiv = createDiv(datestr+'|'+time);
+							console.log($dateDiv);
+						}
 
 						// MESSAGE
 						if(this.message !== undefined){
@@ -70,12 +82,30 @@
 							socialdata += '<p>Comments: '+this.comments.data.length+'</p>';
 						}
 
-						postDIV.append(post,imglink,link,socialdata,'<hr />');
+						postDIV.append($dateDiv,post,imglink,link,socialdata,'<hr />');
 
 						container.append(postDIV);
 					}
 				});
 			});
+		}
+
+		function convertDate(date){
+			var split = date.split('-');
+			var d=new Date(date);
+			var m=months[d.getMonth()];
+			return split[2]+' '+m;
+		}
+
+		function createDiv(timestamp){
+			while(timestamp){
+				var div = $('<div />').addClass('date');
+				var split = timestamp.split('|');
+				var span1 = $('<span />').addClass('daymonth').html(split[0]);
+				var span2 = $('<span />').addClass('time').html(split[1]);
+				div.append(span1,span2);
+				return div;
+			}
 		}
 	}
 })(jQuery);
