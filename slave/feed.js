@@ -24,6 +24,9 @@
 			$.each(data, function(i,value){
 				var objcount = value.length;
 				$.each(value, function(i,obj){
+					if(!obj.hasOwnProperty('message')&&!obj.hasOwnProperty('picture')){
+						objcount--;
+					}
 					if(obj.hasOwnProperty('message')||obj.hasOwnProperty('picture')){
 						var postURL ='http://www.facebook.com/'+userdataobj.username+'/posts/';
 						var postID = this.id.split('_')[1];
@@ -104,9 +107,6 @@
 								container.removeClass('loading');
 							},350);
 						}
-					}
-					else {
-						objcount--;
 					}
 				});
 			});
