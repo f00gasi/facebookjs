@@ -1,11 +1,14 @@
 (function($) { 
 	$.fn.fbFeed = function (data,token){
 		var container = $(this);
+		container.addClass('loading');
+		container.append('<div class="spinner"></div');
 		var post;
 		var img;
 		var link;
 		var socialdata;
 		var username;
+		var count=0;
 		var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 		FB.api(
 		    "/548395945199562?access_token="+token,
@@ -19,10 +22,9 @@
 
 		function init(userdataobj){
 			$.each(data, function(i,value){
-
+				var objcount = value.length;
 				$.each(value, function(i,obj){
 					if(obj.hasOwnProperty('message')||obj.hasOwnProperty('picture')){
-						//console.log(this);
 						var postURL ='http://www.facebook.com/'+userdataobj.username+'/posts/';
 						var postID = this.id.split('_')[1];
 						var $postDIV = $('<div class="post-content" />');
@@ -94,6 +96,17 @@
 						$postDIV.append($dateDiv,$msgDiv,link,$socialDiv);
 
 						container.append($postDIV);
+
+						count++;
+						if(count==objcount){
+							console.log($postDIV);
+							setTimeout(function(){
+								container.removeClass('loading');
+							},350);
+						}
+					}
+					else {
+						objcount--;
 					}
 				});
 			});
