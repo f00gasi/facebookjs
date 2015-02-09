@@ -1,8 +1,15 @@
 (function($) { 
-	$.fn.fbFeed = function (data,token){
+	$.fn.fbFeed = function (options){
+		var options = $.extend({
+			token : null,
+			feedID : null,
+			appID : null
+		}, options);
+
 		var container = $(this);
 		container.addClass('loading');
 		container.append('<div class="spinner"></div');
+
 		var post;
 		var img;
 		var link;
@@ -10,24 +17,30 @@
 		var username;
 		var count=0;
 		var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-		FB.api(
-		    "/548395945199562?access_token="+token,
-		    function (getuserdata) {
-		    	if (getuserdata && !getuserdata.error) {
-		        	username = getuserdata;
-		        	init(username);
-					setTimeout(function(){
-						container.removeClass('loading');
-					},350);		
-		    	}
-		    }
-		);
 
-		function init(userdataobj){
+		// GET USER AND TRIGGER GETTING DATA FROM FACEBOOK
+		window.fbAsyncInit = function() {
+		  FB.init({
+		    appId      : options.appID,
+		    xfbml      : true,
+		    version    : 'v2.2'
+		  });
+			FB.api(
+			    options.feedID+"?access_token="+options.token,
+			    function (userdata) {
+			    	if (userdata && !userdata.error) {
+			        	username = userdata.username;
+			        	getFeed(options.feedID,options.token,username);
+			    	}
+			    }
+			);
+		};
+
+		function init(user,data){
 			$.each(data, function(i,value){
 				$.each(value, function(i,obj){
 					if(obj.hasOwnProperty('message')||obj.hasOwnProperty('picture')){
-						var postURL ='http://www.facebook.com/'+userdataobj.username+'/posts/';
+						var postURL ='http://www.facebook.com/'+user+'/posts/';
 						var postID = this.id.split('_')[1];
 						var $postDIV = $('<div class="post-content" />');
 						var $msgDiv = $('<div class="content-inner" />');
@@ -113,6 +126,21 @@
 					$(this).html('... Mehr anzeigen');
 				}
 			});
+		}
+
+		function getFeed(id,token,user){
+		  FB.api(
+		        id+'/feed?access_token='+token+'&limit=20', function (response) {
+		        if (response && !response.error) {
+		        	init(user,response);
+					setTimeout(function(){
+						container.removeClass('loading');
+					},350);	
+		        }
+		        if(response.error){
+		          console.log(response.error);
+		        }
+		  });
 		}
 
 		function convertDate(date){
