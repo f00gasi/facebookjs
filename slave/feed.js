@@ -16,17 +16,16 @@
 		    	if (getuserdata && !getuserdata.error) {
 		        	username = getuserdata;
 		        	init(username);
+					setTimeout(function(){
+						container.removeClass('loading');
+					},350);		
 		    	}
 		    }
 		);
 
 		function init(userdataobj){
 			$.each(data, function(i,value){
-				var objcount = value.length;
 				$.each(value, function(i,obj){
-					if(!obj.hasOwnProperty('message')&&!obj.hasOwnProperty('picture')){
-						objcount--;
-					}
 					if(obj.hasOwnProperty('message')||obj.hasOwnProperty('picture')){
 						var postURL ='http://www.facebook.com/'+userdataobj.username+'/posts/';
 						var postID = this.id.split('_')[1];
@@ -99,14 +98,6 @@
 						$postDIV.append($dateDiv,$msgDiv,link,$socialDiv);
 
 						container.append($postDIV);
-
-						count++;
-						if(count==objcount){
-							console.log($postDIV);
-							setTimeout(function(){
-								container.removeClass('loading');
-							},350);
-						}
 					}
 				});
 			});
