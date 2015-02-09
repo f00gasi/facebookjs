@@ -101,19 +101,17 @@
 					}
 				});
 			});
-			$(document).ready(function(){
-				$('a.showmore').on('click',function(e){
-					e.preventDefault();
-					var hiddenSpan = $(this).siblings('span.hide');
-					if(hiddenSpan.css('display') == 'none'){
-						hiddenSpan.show();
-						$(this).html('... Weniger anzeigen');
-					}
-					else{
-						hiddenSpan.hide();
-						$(this).html('... Mehr anzeigen');
-					}
-				});
+			$('a.showmore').on('click',function(e){
+				e.preventDefault();
+				var hiddenSpan = $(this).siblings('span.hide');
+				if(hiddenSpan.css('display') == 'none'){
+					hiddenSpan.show();
+					$(this).html('... Weniger anzeigen');
+				}
+				else{
+					hiddenSpan.hide();
+					$(this).html('... Mehr anzeigen');
+				}
 			});
 		}
 
